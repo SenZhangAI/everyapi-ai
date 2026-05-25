@@ -36,8 +36,16 @@ func Bold(s string) string {
 }
 
 // Emph converts **bold** markers in s to bold text, and strips the
-// markers to plain text when styling is unavailable. Apply to any
-// user-facing string whose keywords are marked with **…**.
+// markers to plain text when styling is unavailable.
+//
+// IMPORTANT — markers only render where the string is passed THROUGH
+// Emph. Today that is the launcher picker (commandDesc / subcommandDesc
+// in main.go) and the --help screen (renderUsage). An i18n value that
+// reaches the user by any other path — e.g. fmt.Sprintf(i18n.T(
+// "update.notice"), …) in cmd/update_check.go, which never calls Emph —
+// will print the **…** asterisks LITERALLY. Mark emphasis at the
+// rendering site, not blindly in the locale file. (TestLocaleMarkersBalanced
+// only guards marker balance, not whether a marked key is Emph-routed.)
 func Emph(s string) string {
 	return emphMarkerRe.ReplaceAllStringFunc(s, func(m string) string {
 		return Bold(m[len("**") : len(m)-len("**")])

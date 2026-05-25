@@ -11,7 +11,8 @@ import (
 )
 
 func TestEmph_StyledVsPlain(t *testing.T) {
-	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
+	orig := lipgloss.ColorProfile()
+	t.Cleanup(func() { lipgloss.SetColorProfile(orig) })
 
 	// Styling ON: marker becomes bold ANSI, markers gone.
 	lipgloss.SetColorProfile(termenv.TrueColor)
@@ -31,7 +32,8 @@ func TestEmph_StyledVsPlain(t *testing.T) {
 }
 
 func TestBold_PlainWhenUnstyled(t *testing.T) {
-	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
+	orig := lipgloss.ColorProfile()
+	t.Cleanup(func() { lipgloss.SetColorProfile(orig) })
 	lipgloss.SetColorProfile(termenv.Ascii)
 	if got := style.Bold("login"); got != "login" {
 		t.Fatalf("want %q, got %q", "login", got)

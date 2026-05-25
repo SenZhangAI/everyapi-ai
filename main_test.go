@@ -60,7 +60,8 @@ func TestRenderUsageGatedByRole(t *testing.T) {
 }
 
 func TestNameCell_BoldAfterPadding(t *testing.T) {
-	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
+	orig := lipgloss.ColorProfile()
+	t.Cleanup(func() { lipgloss.SetColorProfile(orig) })
 
 	// Plain profile: exact width, no escapes — alignment preserved.
 	lipgloss.SetColorProfile(termenv.Ascii)
@@ -81,7 +82,8 @@ func TestNameCell_BoldAfterPadding(t *testing.T) {
 }
 
 func TestRenderUsage_StripsMarkersWhenUnstyled(t *testing.T) {
-	t.Cleanup(func() { lipgloss.SetColorProfile(termenv.Ascii) })
+	orig := lipgloss.ColorProfile()
+	t.Cleanup(func() { lipgloss.SetColorProfile(orig) })
 	lipgloss.SetColorProfile(termenv.Ascii)
 	if out := renderUsage(); strings.Contains(out, "**") {
 		t.Fatalf("usage must not leak ** markers when unstyled:\n%s", out)
